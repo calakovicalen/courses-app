@@ -35,12 +35,11 @@ function Login() {
 
 		const result = await usePostUser('login', newUser);
 
-		console.log(result);
-
 		if (result.successful) {
 			alert('Successfuly logged in');
 			setEmail('');
 			setPassword('');
+			localStorage.setItem('userToken', result.result);
 			navigate('/');
 		} else {
 			alert(result.errors[0]);

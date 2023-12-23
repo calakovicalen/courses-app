@@ -1,18 +1,22 @@
 import React from 'react';
 
 import Button from 'src/common/Button/Button';
+
 import { CourseCardProps } from '../../Courses.type';
+import { getCourseDuration } from 'src/helpers/getCourseDuration';
+import { useNavigate } from 'react-router-dom';
 
 import './CourseCard.css';
-import { getCourseDuration } from 'src/helpers/getCourseDuration';
-
 function CourseCard({
+	id,
 	title,
 	description,
 	creationDate,
 	duration,
 	author,
 }: CourseCardProps) {
+	const navigate = useNavigate();
+
 	return (
 		<div className='course-card__container'>
 			<div className='course-card__box--1'>
@@ -35,7 +39,7 @@ function CourseCard({
 				<Button
 					buttonText='show course'
 					onClick={() => {
-						console.log('show course');
+						navigate(`/courses/${id}`);
 					}}
 				/>
 			</div>

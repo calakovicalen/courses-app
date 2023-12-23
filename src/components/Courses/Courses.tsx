@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 import CourseCard from './components/CourseCard/CourseCard';
 import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
+import SearchBar from './components/SearchBar/SearchBar';
 
 import { CoursesProps } from './Courses.type';
 import { Course } from 'src/constants';
 
 import './Courses.css';
-import SearchBar from './components/SearchBar/SearchBar';
 
 function Courses({ courses, authors }: CoursesProps) {
 	const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
@@ -37,6 +37,7 @@ function Courses({ courses, authors }: CoursesProps) {
 						return (
 							<CourseCard
 								key={id}
+								id={id}
 								title={title}
 								description={description}
 								creationDate={creationDate}
