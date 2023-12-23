@@ -4,6 +4,7 @@ import Button from 'src/common/Button/Button';
 import { CourseCardProps } from '../../Courses.type';
 
 import './CourseCard.css';
+import { getCourseDuration } from 'src/helpers/getCourseDuration';
 
 function CourseCard({
 	title,
@@ -24,7 +25,7 @@ function CourseCard({
 						<span>Authors:</span> {author.map((a) => `${a.name}, `)}
 					</p>
 					<p>
-						<span>Duration:</span> {duration}
+						<span>Duration:</span> {getCourseDuration(duration)}
 					</p>
 					<p>
 						<span>Created:</span> {creationDate}
