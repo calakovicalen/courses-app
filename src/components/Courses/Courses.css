@@ -1,0 +1,6 @@
+.courses {
+    padding: 4.6875rem 9.375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}

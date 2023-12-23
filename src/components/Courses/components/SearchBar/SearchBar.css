@@ -1,0 +1,9 @@
+.search-bar__container {
+ display: flex;
+ gap: 1rem;
+}
+
+.search-bar {
+    padding: .8125rem 1rem;
+    width: 25rem;
+}
