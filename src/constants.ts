@@ -61,3 +61,5 @@ export const mockedAuthorsList: Author[] = [
 		name: 'Valentina Larina',
 	},
 ];
+
+export const URL = 'http://localhost:4000/';
