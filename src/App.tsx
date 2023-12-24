@@ -10,6 +10,7 @@ import { mockedCoursesList, mockedAuthorsList } from 'src/constants';
 
 import './App.css';
 import CourseInfo from './components/CourseInfo/CourseInfo';
+import CreateCourse from './components/CreateCourse/CreateCourse';
 
 function App() {
 	const userToken = localStorage.getItem('userToken');
@@ -32,6 +33,7 @@ function App() {
 					}
 				/>
 				<Route path='courses/:courseId' element={<CourseInfo />} />
+				<Route path='courses/add' element={<CreateCourse />} />
 				<Route path='login' element={<Login />} />
 				<Route path='register' element={<Registration />} />
 			</Routes>
