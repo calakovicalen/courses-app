@@ -11,4 +11,5 @@ export interface CourseCardProps {
 	creationDate: string;
 	duration: number;
 	author: Author[];
+	onClick?: () => void;
 }

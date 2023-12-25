@@ -1,9 +1,10 @@
 import React from 'react';
-
 import Button from 'src/common/Button/Button';
+
 import { CourseCardProps } from '../../Courses.type';
 
 import './CourseCard.css';
+import { getCourseDuration } from 'src/helpers/getCourseDuration';
 
 function CourseCard({
 	title,
@@ -11,6 +12,7 @@ function CourseCard({
 	creationDate,
 	duration,
 	author,
+	onClick,
 }: CourseCardProps) {
 	return (
 		<div className='course-card__container'>
@@ -24,22 +26,15 @@ function CourseCard({
 						<span>Authors:</span> {author.map((a) => `${a.name}, `)}
 					</p>
 					<p>
-						<span>Duration:</span> {duration}
+						<span>Duration:</span> {getCourseDuration(duration)}
 					</p>
 					<p>
 						<span>Created:</span> {creationDate}
 					</p>
 				</div>
-
-				<Button
-					buttonText='show course'
-					onClick={() => {
-						console.log('show course');
-					}}
-				/>
+				<Button buttonText='show course' onClick={onClick} />
 			</div>
 		</div>
 	);
 }
-
 export default CourseCard;

@@ -5,6 +5,7 @@ import Button from 'src/common/Button/Button';
 import { SearchBarProps } from './SearchBar.type';
 
 import './SearchBar.css';
+import Input from 'src/common/Input/Input';
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 	const [searchQuery, setSearchQuery] = useState<string>('');
@@ -19,12 +20,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
 	return (
 		<div className='search-bar__container'>
-			<input
-				type='text'
-				placeholder='Search by title or ID'
-				value={searchQuery}
+			<Input
+				inputName=''
+				inputType='text'
+				inputValue={searchQuery}
 				onChange={handleInputChange}
-				className='search-bar'
+				error={null}
 			/>
 			<Button buttonText='Search' onClick={handleSearchClick} />
 		</div>

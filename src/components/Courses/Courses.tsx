@@ -8,9 +8,11 @@ import { Course } from 'src/constants';
 
 import './Courses.css';
 import SearchBar from './components/SearchBar/SearchBar';
+import CourseInfo from '../CourseInfo/CourseInfo';
 
 function Courses({ courses, authors }: CoursesProps) {
 	const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
+	const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
 	const handleSearch = (searchQuery: string) => {
 		const lowerCaseQuery = searchQuery.toLowerCase();
@@ -24,27 +26,40 @@ function Courses({ courses, authors }: CoursesProps) {
 		setFilteredCourses(filtered);
 	};
 
+	const handleShowCourseInfo = (course: Course) => {
+		setSelectedCourse(course === selectedCourse ? null : course);
+	};
+
+	const handleBack = () => {
+		setSelectedCourse(null);
+	};
+
 	return (
 		<section className='courses'>
 			{courses.length === 0 ? (
 				<EmptyCourseList />
 			) : (
 				<>
-					<SearchBar onSearch={handleSearch} />
-					{filteredCourses.map((course) => {
-						const { id, title, description, creationDate, duration } = course;
+					{!selectedCourse && <SearchBar onSearch={handleSearch} />}
+					{selectedCourse ? (
+						<CourseInfo course={selectedCourse} onBack={handleBack} />
+					) : (
+						filteredCourses.map((course) => {
+							const { id, title, description, creationDate, duration } = course;
 
-						return (
-							<CourseCard
-								key={id}
-								title={title}
-								description={description}
-								creationDate={creationDate}
-								duration={duration}
-								author={authors}
-							/>
-						);
-					})}
+							return (
+								<CourseCard
+									key={id}
+									title={title}
+									description={description}
+									creationDate={creationDate}
+									duration={duration}
+									author={authors}
+									onClick={() => handleShowCourseInfo(course)}
+								/>
+							);
+						})
+					)}
 				</>
 			)}
 		</section>
