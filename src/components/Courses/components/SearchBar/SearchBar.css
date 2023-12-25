@@ -3,7 +3,7 @@
  gap: 1rem;
 }
 
-.search-bar {
-    padding: .8125rem 1rem;
+
+.search-bar__container input{
     width: 25rem;
 }
