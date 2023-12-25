@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Input from 'src/common/Input/Input';
 
 function CreateCourse() {
-	const [name, setName] = useState('');
+	/* const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 	const [duration, setDuration] = useState('');
 	const [authors, setAuthors] = useState([]);
@@ -57,7 +57,8 @@ function CreateCourse() {
 				/>
 			</div>
 		</section>
-	);
+	); */
+	return <div>Alen</div>;
 }
 
 export default CreateCourse;
