@@ -13,6 +13,7 @@ import './Courses.css';
 
 function Courses({ courses, authors }: CoursesProps) {
 	const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
+
 	const navigate = useNavigate();
 
 	const handleSearch = (searchQuery: string) => {
@@ -41,7 +42,17 @@ function Courses({ courses, authors }: CoursesProps) {
 						/>
 					</div>
 					{filteredCourses.map((course) => {
-						const { id, title, description, creationDate, duration } = course;
+						const {
+							id,
+							title,
+							description,
+							creationDate,
+							duration,
+							authors: authorIds,
+						} = course;
+						const courseAuthors = authors.filter((author) =>
+							authorIds.includes(author.id)
+						);
 
 						return (
 							<CourseCard
@@ -51,7 +62,7 @@ function Courses({ courses, authors }: CoursesProps) {
 								description={description}
 								creationDate={creationDate}
 								duration={duration}
-								author={authors}
+								author={courseAuthors}
 							/>
 						);
 					})}

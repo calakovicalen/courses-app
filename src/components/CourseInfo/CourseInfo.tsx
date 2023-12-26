@@ -1,19 +1,29 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { mockedCoursesList, mockedAuthorsList } from 'src/constants';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 
 import './CourseInfo.css';
 import Button from 'src/common/Button/Button';
 
-function CourseInfo() {
+function CourseInfo({ courses, authors }) {
 	const { courseId } = useParams();
-	const { id, title, description, duration, creationDate, authors } =
-		mockedCoursesList.find((course) => course.id === courseId);
+	const course = courses.find((course) => course.id === courseId);
 
-	const authorsList = mockedAuthorsList.filter((author, index) => {
-		return author.id === authors.at(index);
-	});
+	const {
+		id,
+		title,
+		description,
+		duration,
+		creationDate,
+		authors: authorsIds,
+	} = course;
+
+	const authorsList = authors.filter((author) =>
+		authorsIds.includes(author.id)
+	);
+
+	console.log(authorsList);
+
 	const navigate = useNavigate();
 
 	return (

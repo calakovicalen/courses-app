@@ -36,6 +36,7 @@ function Login({ onAddToken }) {
 		const result = await usePostUser('login', newUser);
 
 		if (result.successful) {
+			console.log(result);
 			alert('Successfuly logged in');
 			setEmail('');
 			setPassword('');

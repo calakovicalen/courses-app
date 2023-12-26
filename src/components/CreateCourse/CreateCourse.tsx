@@ -3,16 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import uuid from 'react-uuid';
 
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
+import { formatCreationDate } from 'src/helpers/formatCreationDate';
 
 import Input from 'src/common/Input/Input';
 import Button from 'src/common/Button/Button';
 import AuthorItem from './components/AuthorItem/AuthorItem';
 
 import './CreateCourse.css';
-import { formatCreationDate } from 'src/helpers/formatCreationDate';
-import { usePostUser } from 'src/hooks/usePostUser';
 
-function CreateCourse() {
+function CreateCourse({ onCreateCourse, onCreateAuthor }) {
 	const navigate = useNavigate();
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
@@ -81,7 +80,8 @@ function CreateCourse() {
 			creationDate: formatCreationDate(),
 		};
 
-		usePostUser('courses/add', newCourseObj);
+		onCreateAuthor(courseAuthors);
+		onCreateCourse(newCourseObj);
 
 		navigate('/courses');
 	};

@@ -13,8 +13,10 @@ import CourseInfo from './components/CourseInfo/CourseInfo';
 import CreateCourse from './components/CreateCourse/CreateCourse';
 
 function App() {
-	const navigate = useNavigate();
 	const [isToken, setIsToken] = useState(false);
+	const [coursesList, setCoursesList] = useState(mockedCoursesList);
+	const [authorsList, setAuthorsList] = useState(mockedAuthorsList);
+	const navigate = useNavigate();
 
 	const handleRemoveToken = () => {
 		localStorage.removeItem('userToken');
@@ -24,6 +26,14 @@ function App() {
 	const handleAddToken = (key, value) => {
 		localStorage.setItem(key, value);
 		setIsToken(true);
+	};
+
+	const handleCreateCourse = (newCourse) => {
+		setCoursesList([...coursesList, newCourse]);
+	};
+
+	const handleCreateAuthor = (newAuthor) => {
+		setAuthorsList([...authorsList, newAuthor]);
 	};
 
 	useEffect(() => {
@@ -43,12 +53,21 @@ function App() {
 			<Routes>
 				<Route
 					path='/courses'
+					element={<Courses courses={coursesList} authors={authorsList} />}
+				/>
+				<Route
+					path='courses/:courseId'
+					element={<CourseInfo courses={coursesList} authors={authorsList} />}
+				/>
+				<Route
+					path='courses/add'
 					element={
-						<Courses courses={mockedCoursesList} authors={mockedAuthorsList} />
+						<CreateCourse
+							onCreateCourse={handleCreateCourse}
+							onCreateAuthor={handleCreateAuthor}
+						/>
 					}
 				/>
-				<Route path='courses/:courseId' element={<CourseInfo />} />
-				<Route path='courses/add' element={<CreateCourse />} />
 				<Route path='login' element={<Login onAddToken={handleAddToken} />} />
 				<Route path='register' element={<Registration />} />
 			</Routes>

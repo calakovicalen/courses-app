@@ -16,7 +16,6 @@ function CourseCard({
 	author,
 }: CourseCardProps) {
 	const navigate = useNavigate();
-
 	return (
 		<div className='course-card__container'>
 			<div className='course-card__box--1'>
