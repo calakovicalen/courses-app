@@ -39,7 +39,10 @@ function Login({ onAddToken }) {
 			alert('Successfuly logged in');
 			setEmail('');
 			setPassword('');
-			onAddToken('userToken', result.user.name);
+			onAddToken(
+				'userToken',
+				result.user.name ? result.user.name : result.user.email
+			);
 			navigate('/courses');
 		} else {
 			alert(result.errors[0]);
