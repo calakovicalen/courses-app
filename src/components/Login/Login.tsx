@@ -5,7 +5,7 @@ import Form from 'src/common/Form/Form';
 import Input from 'src/common/Input/Input';
 import { usePostUser } from 'src/hooks/usePostUser';
 
-function Login() {
+function Login({ onAddToken }) {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errors, setErrors] = useState({
@@ -14,7 +14,7 @@ function Login() {
 	});
 	const navigate = useNavigate();
 
-	const handleSubmit = async (event) => {
+	const handleSubmit = async (event: { preventDefault: () => void }) => {
 		event.preventDefault();
 
 		const newErrors = {
@@ -39,8 +39,8 @@ function Login() {
 			alert('Successfuly logged in');
 			setEmail('');
 			setPassword('');
-			localStorage.setItem('userToken', result.result);
-			navigate('/');
+			onAddToken('userToken', result.user.name);
+			navigate('/courses');
 		} else {
 			alert(result.errors[0]);
 		}

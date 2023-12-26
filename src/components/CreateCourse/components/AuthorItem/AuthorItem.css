@@ -1,0 +1,21 @@
+.authors-list {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+.authors-list button {
+    border: none;
+    width: 1rem;
+    height: 1rem;
+    background: none;
+    border-radius: .25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authors-list button:hover {
+    background: #007298
+}
+

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 
 import Header from './components/Header/Header';
@@ -13,18 +13,33 @@ import CourseInfo from './components/CourseInfo/CourseInfo';
 import CreateCourse from './components/CreateCourse/CreateCourse';
 
 function App() {
-	const userToken = localStorage.getItem('userToken');
 	const navigate = useNavigate();
+	const [isToken, setIsToken] = useState(false);
+
+	const handleRemoveToken = () => {
+		localStorage.removeItem('userToken');
+		setIsToken(false);
+	};
+
+	const handleAddToken = (key, value) => {
+		localStorage.setItem(key, value);
+		setIsToken(true);
+	};
 
 	useEffect(() => {
-		if (userToken) {
+		const item = localStorage.getItem('userToken');
+		setIsToken(item !== null);
+
+		if (isToken) {
 			navigate('/courses');
+		} else {
+			navigate('/login');
 		}
-	}, [userToken]);
+	}, [isToken, setIsToken]);
 
 	return (
 		<div className='app'>
-			<Header />
+			<Header token={isToken} onRemoveToken={handleRemoveToken} />
 			<Routes>
 				<Route
 					path='/courses'
@@ -34,7 +49,7 @@ function App() {
 				/>
 				<Route path='courses/:courseId' element={<CourseInfo />} />
 				<Route path='courses/add' element={<CreateCourse />} />
-				<Route path='login' element={<Login />} />
+				<Route path='login' element={<Login onAddToken={handleAddToken} />} />
 				<Route path='register' element={<Registration />} />
 			</Routes>
 		</div>

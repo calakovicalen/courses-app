@@ -13,6 +13,7 @@ import './Courses.css';
 
 function Courses({ courses, authors }: CoursesProps) {
 	const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
+	const navigate = useNavigate();
 
 	const handleSearch = (searchQuery: string) => {
 		const lowerCaseQuery = searchQuery.toLowerCase();
@@ -25,8 +26,6 @@ function Courses({ courses, authors }: CoursesProps) {
 
 		setFilteredCourses(filtered);
 	};
-
-	const navigate = useNavigate();
 
 	return (
 		<section className='courses'>

@@ -11,9 +11,10 @@ function Input({
 	onChange,
 	required,
 	error,
+	className,
 }: InputProps) {
 	return (
-		<div className='input__container'>
+		<div className={`input__container ${className}`}>
 			<label>{inputName}</label>
 			<input
 				type={inputType}
