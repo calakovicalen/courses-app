@@ -1,30 +1,24 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getCourseDuration } from 'src/helpers/getCourseDuration';
 
 import './CourseInfo.css';
 import Button from 'src/common/Button/Button';
+import { RootState } from 'src/store/rootReducer';
+import { Author } from 'src/constants';
+import { getAuthorNames } from 'src/helpers/getAuthorsForCourses';
+import { getCourseDuration } from 'src/helpers/getCourseDuration';
 
-function CourseInfo({ courses, authors }) {
+function CourseInfo() {
+	const navigate = useNavigate();
 	const { courseId } = useParams();
+	const courses = useSelector((state: RootState) => state.courses);
+
 	const course = courses.find((course) => course.id === courseId);
 
-	const {
-		id,
-		title,
-		description,
-		duration,
-		creationDate,
-		authors: authorsIds,
-	} = course;
+	const { id, title, description, duration, creationDate } = course;
 
-	const authorsList = authors.filter((author) =>
-		authorsIds.includes(author.id)
-	);
-
-	console.log(authorsList);
-
-	const navigate = useNavigate();
+	const authorNames: Author[] = getAuthorNames(course);
 
 	return (
 		<div className='course-info__container'>
@@ -50,7 +44,17 @@ function CourseInfo({ courses, authors }) {
 							<span>{getCourseDuration(duration)}</span>
 						</p>
 						<p>{creationDate}</p>
-						<p>{authorsList.map((author) => `${author.name}, `)}</p>
+						<p>
+							{authorNames.map((author, index) => (
+								<React.Fragment key={index}>
+									{index < authorNames.length - 1 ? (
+										<>{`${author.name}, `}</>
+									) : (
+										<>{`${author.name}`}</>
+									)}
+								</React.Fragment>
+							))}
+						</p>
 					</div>
 				</div>
 			</div>

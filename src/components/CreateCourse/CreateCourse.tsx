@@ -10,13 +10,19 @@ import Button from 'src/common/Button/Button';
 import AuthorItem from './components/AuthorItem/AuthorItem';
 
 import './CreateCourse.css';
+import { useDispatch } from 'react-redux';
+import { addNewCourseAction } from 'src/store/courses/actions';
+import { addNewAuthorAction } from 'src/store/authors/actions';
+import { AuthorType } from 'src/store/authors/types';
 
-function CreateCourse({ onCreateCourse, onCreateAuthor }) {
+function CreateCourse() {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [authors, setAuthors] = useState([]);
-	const [courseAuthors, setCourseAuthors] = useState([]);
+	const [courseAuthors, setCourseAuthors] = useState<AuthorType[]>([]);
 	const [newAuthor, setNewAuthor] = useState('');
 	const [duration, setDuration] = useState('');
 
@@ -56,6 +62,7 @@ function CreateCourse({ onCreateCourse, onCreateAuthor }) {
 	const handleAddAuthor = (author) => {
 		setAuthors(authors.filter((a) => a.id !== author.id));
 		setCourseAuthors([...courseAuthors, author]);
+		dispatch(addNewAuthorAction(author));
 	};
 
 	const handleDeleteAuthor = (author) => {
@@ -80,9 +87,7 @@ function CreateCourse({ onCreateCourse, onCreateAuthor }) {
 			creationDate: formatCreationDate(),
 		};
 
-		onCreateAuthor(courseAuthors);
-		onCreateCourse(newCourseObj);
-
+		dispatch(addNewCourseAction(newCourseObj));
 		navigate('/courses');
 	};
 

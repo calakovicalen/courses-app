@@ -13,9 +13,10 @@ function CourseCard({
 	description,
 	creationDate,
 	duration,
-	author,
+	author: authors,
 }: CourseCardProps) {
 	const navigate = useNavigate();
+
 	return (
 		<div className='course-card__container'>
 			<div className='course-card__box--1'>
@@ -25,7 +26,16 @@ function CourseCard({
 			<div className='course-card__box--2'>
 				<div className='text-container'>
 					<p>
-						<span>Authors:</span> {author.map((a) => `${a.name}, `)}
+						<span>Authors:</span>
+						{authors.map((author, index) => (
+							<React.Fragment key={index}>
+								{index < authors.length - 1 ? (
+									<>{` ${author.name}, `}</>
+								) : (
+									<>{` ${author.name}`}</>
+								)}
+							</React.Fragment>
+						))}
 					</p>
 					<p>
 						<span>Duration:</span> {getCourseDuration(duration)}

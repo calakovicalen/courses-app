@@ -44,6 +44,7 @@ function Login({ onAddToken }) {
 				'userToken',
 				result.user.name ? result.user.name : result.user.email
 			);
+			localStorage.setItem('user_token', result);
 			navigate('/courses');
 		} else {
 			alert(result.errors[0]);
