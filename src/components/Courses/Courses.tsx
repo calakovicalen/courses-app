@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
-import SearchBar from './components/SearchBar/SearchBar';
-import Button from 'src/common/Button/Button';
-
-import './Courses.css';
 import { useSelector } from 'react-redux';
+
 import { RootState } from 'src/store/rootReducer';
 import { CourseType } from 'src/store/courses/types';
+
+import SearchBar from './components/SearchBar/SearchBar';
+import Button from 'src/common/Button/Button';
 import CoursesList from './components/CoursesList/CoursesList';
+import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
+
+import './Courses.css';
 
 function Courses() {
 	const navigate = useNavigate();
@@ -38,10 +39,9 @@ function Courses() {
 			<>
 				<div className='searchbar__container'>
 					<SearchBar onSearch={handleSearch} />
-					<Button
-						buttonText='add new course'
-						onClick={() => navigate('/courses/add')}
-					/>
+					<Button onClick={() => navigate('/courses/add')}>
+						Add new course
+					</Button>
 				</div>
 				<CoursesList courses={filteredCourses} />
 			</>

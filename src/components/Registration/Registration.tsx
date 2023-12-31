@@ -7,7 +7,7 @@ import Button from 'src/common/Button/Button';
 import Input from 'src/common/Input/Input';
 import Form from 'src/common/Form/Form';
 
-function Registration() {
+const Registration = () => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -16,6 +16,10 @@ function Registration() {
 		email: false,
 		password: false,
 	});
+
+	const handleInputChange = (event, setter) => {
+		setter(event.target.value);
+	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -57,29 +61,29 @@ function Registration() {
 				inputType='text'
 				inputValue={name}
 				error={errors.name}
-				onChange={(event) => setName(event.target.value)}
+				onChange={(event) => handleInputChange(event, setName)}
 			/>
 			<Input
 				inputName='email'
 				inputType='email'
 				inputValue={email}
 				error={errors.email}
-				onChange={(event) => setEmail(event.target.value)}
+				onChange={(event) => handleInputChange(event, setEmail)}
 			/>
 			<Input
 				inputName='password'
 				inputType='password'
 				inputValue={password}
 				error={errors.password}
-				onChange={(event) => setPassword(event.target.value)}
+				onChange={(event) => handleInputChange(event, setPassword)}
 			/>
-			<Button buttonText='Register' type='submit' />
+			<Button type='submit'>Register</Button>
 
 			<p>
 				If you have an account you may <Link to='/login'>Login</Link>
 			</p>
 		</Form>
 	);
-}
+};
 
 export default Registration;

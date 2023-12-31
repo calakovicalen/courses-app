@@ -2,23 +2,25 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import './CourseInfo.css';
-import Button from 'src/common/Button/Button';
-import { RootState } from 'src/store/rootReducer';
-import { Author } from 'src/constants';
-import { getAuthorNames } from 'src/helpers/getAuthorsForCourses';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
+import { getAuthorNames } from 'src/helpers/getAuthorsForCourses';
+import { RootState } from 'src/store/rootReducer';
+
+import Button from 'src/common/Button/Button';
+import './CourseInfo.css';
 
 function CourseInfo() {
-	const navigate = useNavigate();
 	const { courseId } = useParams();
 	const courses = useSelector((state: RootState) => state.courses);
-
-	const course = courses.find((course) => course.id === courseId);
-
+	const course = courses.find((c) => c.id === courseId);
+	const authorNames = getAuthorNames(course);
 	const { id, title, description, duration, creationDate } = course;
 
-	const authorNames: Author[] = getAuthorNames(course);
+	const navigate = useNavigate();
+
+	if (!course) {
+		return <div>Course not found.</div>;
+	}
 
 	return (
 		<div className='course-info__container'>
@@ -58,7 +60,7 @@ function CourseInfo() {
 					</div>
 				</div>
 			</div>
-			<Button buttonText='Back' onClick={() => navigate('/courses')} />
+			<Button onClick={() => navigate('/courses')}>Back</Button>
 		</div>
 	);
 }

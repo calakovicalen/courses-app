@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import uuid from 'react-uuid';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
+import { addCourseAction } from 'src/store/courses/actions';
+import { addNewAuthorAction } from 'src/store/authors/actions';
+import { AuthorType } from 'src/store/authors/types';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 import { formatCreationDate } from 'src/helpers/formatCreationDate';
 
@@ -10,22 +14,20 @@ import Button from 'src/common/Button/Button';
 import AuthorItem from './components/AuthorItem/AuthorItem';
 
 import './CreateCourse.css';
-import { useDispatch } from 'react-redux';
-import { addNewCourseAction } from 'src/store/courses/actions';
-import { addNewAuthorAction } from 'src/store/authors/actions';
-import { AuthorType } from 'src/store/authors/types';
 
-function CreateCourse() {
+const CreateCourse = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [authors, setAuthors] = useState([]);
-	const [courseAuthors, setCourseAuthors] = useState<AuthorType[]>([]);
-	const [newAuthor, setNewAuthor] = useState('');
-	const [duration, setDuration] = useState('');
+	const [formData, setFormData] = useState({
+		title: '',
+		description: '',
+		duration: '',
+		newAuthor: '',
+	});
 
+	const [authors, setAuthors] = useState<AuthorType[]>([]);
+	const [courseAuthors, setCourseAuthors] = useState<AuthorType[]>([]);
 	const [errors, setErrors] = useState({
 		title: false,
 		description: false,
@@ -33,14 +35,16 @@ function CreateCourse() {
 		authors: false,
 	});
 
-	const newErrors = {
-		title: title.length === 0,
-		description: description.length === 0,
-		duration: duration.length === 0,
-		authors: courseAuthors.length === 0,
+	const handleInputChange = (name, value) => {
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
 	};
 
 	const handleCreateAuthor = () => {
+		const { newAuthor } = formData;
+
 		if (newAuthor.trim() === '') {
 			setErrors((prevErrors) => ({
 				...prevErrors,
@@ -51,7 +55,10 @@ function CreateCourse() {
 
 		const newAuthorObj = { id: uuid(), name: newAuthor };
 		setAuthors([...authors, newAuthorObj]);
-		setNewAuthor('');
+		setFormData((prevData) => ({
+			...prevData,
+			newAuthor: '',
+		}));
 
 		setErrors((prevErrors) => ({
 			...prevErrors,
@@ -60,17 +67,26 @@ function CreateCourse() {
 	};
 
 	const handleAddAuthor = (author) => {
-		setAuthors(authors.filter((a) => a.id !== author.id));
-		setCourseAuthors([...courseAuthors, author]);
+		setAuthors((prevAuthors) => prevAuthors.filter((a) => a.id !== author.id));
+		setCourseAuthors((prevCourseAuthors) => [...prevCourseAuthors, author]);
 		dispatch(addNewAuthorAction(author));
 	};
 
 	const handleDeleteAuthor = (author) => {
-		setAuthors(authors.filter((a) => a.id !== author.id));
+		setAuthors((prevAuthors) => prevAuthors.filter((a) => a.id !== author.id));
 	};
 
 	const handleCreateCourse = (e) => {
 		e.preventDefault();
+
+		const { title, description, duration } = formData;
+
+		const newErrors = {
+			title: title.length === 0,
+			description: description.length === 0,
+			duration: duration.length === 0,
+			authors: courseAuthors.length === 0,
+		};
 
 		setErrors(newErrors);
 
@@ -87,28 +103,8 @@ function CreateCourse() {
 			creationDate: formatCreationDate(),
 		};
 
-		dispatch(addNewCourseAction(newCourseObj));
+		dispatch(addCourseAction(newCourseObj));
 		navigate('/courses');
-	};
-
-	const handleDurationChange = (event) => {
-		const newDuration = event.target.value;
-		setDuration(newDuration);
-
-		setErrors((prevErrors) => ({
-			...prevErrors,
-			duration: newDuration.length === 0,
-		}));
-	};
-
-	const handleNewAuthorChange = (event) => {
-		const newAuthorName = event.target.value;
-		setNewAuthor(newAuthorName);
-
-		setErrors((prevErrors) => ({
-			...prevErrors,
-			authors: courseAuthors.length === 0 && newAuthorName.length === 0,
-		}));
 	};
 
 	return (
@@ -120,16 +116,18 @@ function CreateCourse() {
 					<Input
 						inputName='Title'
 						inputType='text'
-						inputValue={title}
-						onChange={(event) => setTitle(event.target.value)}
+						inputValue={formData.title}
+						onChange={(event) => handleInputChange('title', event.target.value)}
 						error={errors.title}
 						className='col-2'
 					/>
 					<Input
 						inputName='Description'
 						inputType='textarea'
-						inputValue={description}
-						onChange={(event) => setDescription(event.target.value)}
+						inputValue={formData.description}
+						onChange={(event) =>
+							handleInputChange('description', event.target.value)
+						}
 						error={errors.description}
 						className='col-3'
 					/>
@@ -138,11 +136,13 @@ function CreateCourse() {
 						<Input
 							inputName='duration'
 							inputType='number'
-							inputValue={duration}
-							onChange={handleDurationChange}
+							inputValue={formData.duration}
+							onChange={(event) =>
+								handleInputChange('duration', event.target.value)
+							}
 							error={errors.duration}
 						/>
-						<p>{getCourseDuration(Number(duration))}</p>
+						<p>{getCourseDuration(Number(formData.duration))}</p>
 					</div>
 					<div className='col-6'>
 						<h3 className='form__header '>Authors</h3>
@@ -150,15 +150,15 @@ function CreateCourse() {
 							<Input
 								inputName='Author name'
 								inputType='text'
-								inputValue={newAuthor}
-								onChange={handleNewAuthorChange}
+								inputValue={formData.newAuthor}
+								onChange={(event) =>
+									handleInputChange('newAuthor', event.target.value)
+								}
 								error={errors.authors}
 							/>
-							<Button
-								buttonText='Create Author'
-								type='button'
-								onClick={handleCreateAuthor}
-							/>
+							<Button type='button' onClick={handleCreateAuthor}>
+								Create Author
+							</Button>
 						</div>
 					</div>
 
@@ -190,17 +190,18 @@ function CreateCourse() {
 
 				<div className='form__button-container'>
 					<Button
-						buttonText='Cancel'
 						onClick={(e) => {
 							e.preventDefault();
 							navigate(-1);
 						}}
-					/>
-					<Button buttonText='Create Course' type='submit' />
+					>
+						Cancel
+					</Button>
+					<Button type='submit'>Create Course</Button>
 				</div>
 			</form>
 		</section>
 	);
-}
+};
 
 export default CreateCourse;

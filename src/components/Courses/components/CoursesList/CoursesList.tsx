@@ -1,14 +1,15 @@
 import React from 'react';
-import CourseCard from '../CourseCard/CourseCard';
+
 import { getAuthorNames } from 'src/helpers/getAuthorsForCourses';
-import { Author } from 'src/constants';
+
+import CourseCard from '../CourseCard/CourseCard';
 
 function CoursesList({ courses }) {
 	return (
 		<>
 			{courses.map((course) => {
 				const { id, title, description, creationDate, duration } = course;
-				const authorNames: Author[] = getAuthorNames(course);
+				const authorNames = getAuthorNames(course);
 
 				return (
 					<CourseCard

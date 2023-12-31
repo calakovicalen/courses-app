@@ -1,21 +1,30 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+import { getCourseDuration } from 'src/helpers/getCourseDuration';
+import { deleteCourseAction } from 'src/store/courses/actions';
+import { CourseCardProps } from '../../Courses.type';
 
 import Button from 'src/common/Button/Button';
-
-import { CourseCardProps } from '../../Courses.type';
-import { getCourseDuration } from 'src/helpers/getCourseDuration';
-import { useNavigate } from 'react-router-dom';
-
+import Trash from 'src/assets/Trash';
+import Pen from 'src/assets/Pen';
 import './CourseCard.css';
-function CourseCard({
+
+const CourseCard = ({
 	id,
 	title,
 	description,
 	creationDate,
 	duration,
 	author: authors,
-}: CourseCardProps) {
+}: CourseCardProps) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const handleShowCourse = () => navigate(`/courses/${id}`);
+	const handleDeleteCourse = () => dispatch(deleteCourseAction(id));
+	const handleEditCourse = () => console.log('edit');
 
 	return (
 		<div className='course-card__container'>
@@ -45,15 +54,18 @@ function CourseCard({
 					</p>
 				</div>
 
-				<Button
-					buttonText='show course'
-					onClick={() => {
-						navigate(`/courses/${id}`);
-					}}
-				/>
+				<div className='buttons-container'>
+					<Button onClick={handleShowCourse}>Show course</Button>
+					<Button onClick={handleDeleteCourse}>
+						<Trash />
+					</Button>
+					<Button onClick={handleEditCourse}>
+						<Pen />
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
-}
+};
 
 export default CourseCard;

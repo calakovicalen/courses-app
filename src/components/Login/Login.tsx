@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+
+import { loginUser } from 'src/services';
+import { RootState } from 'src/store/rootReducer';
+import {
+	loginFailure,
+	loginRequest,
+	loginSuccess,
+} from 'src/store/user/actions';
+
 import Button from 'src/common/Button/Button';
 import Form from 'src/common/Form/Form';
 import Input from 'src/common/Input/Input';
-import { usePostUser } from 'src/hooks/usePostUser';
 
-function Login({ onAddToken }) {
+const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errors, setErrors] = useState({
@@ -13,8 +22,10 @@ function Login({ onAddToken }) {
 		password: false,
 	});
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { loading } = useSelector((state: RootState) => state.auth);
 
-	const handleSubmit = async (event: { preventDefault: () => void }) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 
 		const newErrors = {
@@ -28,26 +39,21 @@ function Login({ onAddToken }) {
 			return;
 		}
 
-		const newUser = {
-			password,
-			email,
-		};
+		dispatch(loginRequest());
 
-		const result = await usePostUser('login', newUser);
+		try {
+			const result = await loginUser({ email, password });
 
-		if (result.successful) {
-			console.log(result);
-			alert('Successfuly logged in');
-			setEmail('');
-			setPassword('');
-			onAddToken(
-				'userToken',
-				result.user.name ? result.user.name : result.user.email
-			);
-			localStorage.setItem('user_token', result);
-			navigate('/courses');
-		} else {
-			alert(result.errors[0]);
+			if (result.success) {
+				dispatch(loginSuccess(result.data.result, result.data.user));
+				navigate('/courses');
+			} else {
+				dispatch(loginFailure(result.error));
+				alert(result.error);
+			}
+		} catch (error) {
+			console.error('Error during login', error);
+			dispatch(loginFailure('An error occurred during login'));
 		}
 	};
 
@@ -67,14 +73,14 @@ function Login({ onAddToken }) {
 				error={errors.password}
 				onChange={(event) => setPassword(event.target.value)}
 			/>
-			<Button buttonText='Login' type='submit' />
+			<Button type='submit'>{loading ? 'Logging in...' : 'Login'}</Button>
 
 			<p>
-				If you don't have an account you may <br />{' '}
+				If you don't have an account you may <br />
 				<Link to='/register'>Register</Link>
 			</p>
 		</Form>
 	);
-}
+};
 
 export default Login;

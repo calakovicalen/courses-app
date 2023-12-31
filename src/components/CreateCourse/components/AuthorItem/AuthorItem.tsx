@@ -1,18 +1,16 @@
 import React from 'react';
-import Trash from 'src/assets/Trash';
+import TrashAuthor from 'src/assets/TrashAuthor';
 
 import './AuthorItem.css';
 
-function AuthorItem({ author, onDelete, onAdd }) {
-	return (
-		<li className='authors-list'>
-			{author.name}
-			<button onClick={() => onAdd(author)}>+</button>
-			<button onClick={() => onDelete(author)}>
-				<Trash />
-			</button>
-		</li>
-	);
-}
+const AuthorItem = ({ author, onDelete, onAdd }) => (
+	<li className='authors-list'>
+		{author.name}
+		<button onClick={() => onAdd(author)}>+</button>
+		<button onClick={() => onDelete(author)}>
+			<TrashAuthor />
+		</button>
+	</li>
+);
 
 export default AuthorItem;
