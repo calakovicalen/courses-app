@@ -4,6 +4,7 @@ import {
 	CoursesActionTypes,
 	DeleteCourseAction,
 	EditCourseAction,
+	GetCoursesAction,
 } from './types';
 
 export const addCourseAction = (courseData: CourseType): AddCourseAction => ({
@@ -19,4 +20,11 @@ export const editCourseAction = (courseData: CourseType): EditCourseAction => ({
 export const deleteCourseAction = (courseId: string): DeleteCourseAction => ({
 	type: CoursesActionTypes.DELETE_COURSE,
 	payload: courseId,
+});
+
+export const getCoursesAction = (
+	coursesData: CourseType[]
+): GetCoursesAction => ({
+	type: CoursesActionTypes.GET_COURSES,
+	payload: coursesData,
 });

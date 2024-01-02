@@ -1,9 +1,8 @@
-import { AuthorType } from '../authors/types';
-
 export const enum CoursesActionTypes {
 	ADD_COURSE = 'ADD_COURSE',
 	EDIT_COURSE = 'EDIT_COURSE',
 	DELETE_COURSE = 'DELETE_COURSE',
+	GET_COURSES = 'GET_COURSES',
 }
 export interface CourseType {
 	id: string;
@@ -11,13 +10,14 @@ export interface CourseType {
 	description: string;
 	creationDate: string;
 	duration: number;
-	authors: AuthorType[];
+	authors: string[];
 }
 
 export type CoursesAction =
 	| AddCourseAction
 	| EditCourseAction
-	| DeleteCourseAction;
+	| DeleteCourseAction
+	| GetCoursesAction;
 
 export type AddCourseAction = {
 	type: CoursesActionTypes.ADD_COURSE;
@@ -32,4 +32,9 @@ export type EditCourseAction = {
 export type DeleteCourseAction = {
 	type: CoursesActionTypes.DELETE_COURSE;
 	payload: string;
+};
+
+export type GetCoursesAction = {
+	type: CoursesActionTypes.GET_COURSES;
+	payload: CourseType[];
 };

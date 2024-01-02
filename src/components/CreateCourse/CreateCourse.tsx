@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import uuid from 'react-uuid';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { addCourseAction } from 'src/store/courses/actions';
 import { addNewAuthorAction } from 'src/store/authors/actions';
 import { AuthorType } from 'src/store/authors/types';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 import { formatCreationDate } from 'src/helpers/formatCreationDate';
+import { RootState } from 'src/store/rootReducer';
+import { addAuthor, addCourse } from 'src/services';
 
 import Input from 'src/common/Input/Input';
 import Button from 'src/common/Button/Button';
@@ -18,6 +20,7 @@ import './CreateCourse.css';
 const CreateCourse = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const { token } = useSelector((state: RootState) => state.auth);
 
 	const [formData, setFormData] = useState({
 		title: '',
@@ -28,6 +31,7 @@ const CreateCourse = () => {
 
 	const [authors, setAuthors] = useState<AuthorType[]>([]);
 	const [courseAuthors, setCourseAuthors] = useState<AuthorType[]>([]);
+
 	const [errors, setErrors] = useState({
 		title: false,
 		description: false,
@@ -66,9 +70,11 @@ const CreateCourse = () => {
 		}));
 	};
 
-	const handleAddAuthor = (author) => {
+	const handleAddAuthor = async (author) => {
 		setAuthors((prevAuthors) => prevAuthors.filter((a) => a.id !== author.id));
 		setCourseAuthors((prevCourseAuthors) => [...prevCourseAuthors, author]);
+		const data = await addAuthor(author, token);
+		console.log(data);
 		dispatch(addNewAuthorAction(author));
 	};
 
@@ -76,35 +82,44 @@ const CreateCourse = () => {
 		setAuthors((prevAuthors) => prevAuthors.filter((a) => a.id !== author.id));
 	};
 
-	const handleCreateCourse = (e) => {
-		e.preventDefault();
+	const handleCreateCourse = async (e) => {
+		try {
+			e.preventDefault();
 
-		const { title, description, duration } = formData;
+			const { title, description, duration } = formData;
 
-		const newErrors = {
-			title: title.length === 0,
-			description: description.length === 0,
-			duration: duration.length === 0,
-			authors: courseAuthors.length === 0,
-		};
+			const newErrors = {
+				title: title.length === 0,
+				description: description.length === 0,
+				duration: duration.length === 0,
+				authors: courseAuthors.length === 0,
+			};
 
-		setErrors(newErrors);
+			setErrors(newErrors);
 
-		if (Object.values(newErrors).some((error) => error)) {
-			return;
+			if (Object.values(newErrors).some((error) => error)) {
+				return;
+			}
+
+			const authorIds = courseAuthors.map((author) => author.id);
+
+			const newCourseObj = {
+				id: uuid(),
+				title,
+				description,
+				duration: Number(duration),
+				authors: authorIds,
+				creationDate: formatCreationDate(),
+			};
+			console.log(newCourseObj);
+			const data = await addCourse(newCourseObj, token);
+			console.log(data);
+
+			dispatch(addCourseAction(newCourseObj));
+			navigate('/courses');
+		} catch (error) {
+			console.error('Error creating course:', error);
 		}
-
-		const newCourseObj = {
-			id: uuid(),
-			title,
-			description,
-			duration: Number(duration),
-			authors: courseAuthors,
-			creationDate: formatCreationDate(),
-		};
-
-		dispatch(addCourseAction(newCourseObj));
-		navigate('/courses');
 	};
 
 	return (

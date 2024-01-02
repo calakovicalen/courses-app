@@ -1,7 +1,3 @@
-/* const coursesAPI = () => {
-
-} */
-
 /* USER API */
 const URL = 'http://localhost:4000';
 
@@ -47,5 +43,97 @@ export const logoutUser = async (token) => {
 	} catch (error) {
 		console.error('Error during logout:', error);
 		return { success: false, error: 'An error occurred during logout' };
+	}
+};
+
+/* COURSES API */
+
+export const fetchCourses = async () => {
+	try {
+		const response = await fetch(`${URL}/courses/all`);
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error fetching courses:', error);
+		throw error;
+	}
+};
+
+export const addCourse = async (courseData, token) => {
+	try {
+		const response = await fetch(`${URL}/courses/add`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+			body: JSON.stringify(courseData),
+		});
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error adding course:', error);
+		throw error;
+	}
+};
+
+export const deleteCourse = async (courseId, token) => {
+	try {
+		await fetch(`${URL}/courses/${courseId}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+		});
+	} catch (error) {
+		console.error('Error deleting course:', error);
+		throw error;
+	}
+};
+
+/* AUTHORS API */
+
+export const fetchAuthors = async () => {
+	try {
+		const response = await fetch(`${URL}/authors/all`);
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error fetching courses:', error);
+		throw error;
+	}
+};
+
+export const addAuthor = async (authorData, token) => {
+	try {
+		const response = await fetch(`${URL}/authors/add`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+			body: JSON.stringify(authorData),
+		});
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error adding course:', error);
+		throw error;
+	}
+};
+
+export const deleteAuthor = async (authorId, token) => {
+	try {
+		await fetch(`${URL}/courses/${authorId}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+		});
+	} catch (error) {
+		console.error('Error deleting course:', error);
+		throw error;
 	}
 };

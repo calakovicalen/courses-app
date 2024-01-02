@@ -17,6 +17,10 @@ export const coursesReducer = (
 
 		case CoursesActionTypes.DELETE_COURSE:
 			return state.filter((course) => course.id !== action.payload);
+
+		case CoursesActionTypes.GET_COURSES:
+			return action.payload;
+
 		default:
 			return state;
 	}

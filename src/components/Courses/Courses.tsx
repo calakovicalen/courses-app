@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from 'src/store/rootReducer';
 import { CourseType } from 'src/store/courses/types';
@@ -11,9 +11,12 @@ import CoursesList from './components/CoursesList/CoursesList';
 import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
 
 import './Courses.css';
+import { fetchCourses } from 'src/services';
+import { getCoursesAction } from 'src/store/courses/actions';
 
 function Courses() {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const courses = useSelector((state: RootState) => state.courses);
 
 	const [filteredCourses, setFilteredCourses] = useState<CourseType[]>(courses);
@@ -30,6 +33,15 @@ function Courses() {
 		setFilteredCourses(filtered);
 	};
 
+	const getCourses = async () => {
+		const data = await fetchCourses();
+		dispatch(getCoursesAction(data.result));
+	};
+
+	useEffect(() => {
+		getCourses();
+	}, []);
+
 	const renderContent = () => {
 		if (courses.length === 0) {
 			return <EmptyCourseList />;
@@ -43,7 +55,7 @@ function Courses() {
 						Add new course
 					</Button>
 				</div>
-				<CoursesList courses={filteredCourses} />
+				<CoursesList courses={courses} />
 			</>
 		);
 	};
