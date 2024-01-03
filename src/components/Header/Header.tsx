@@ -14,7 +14,9 @@ const Header = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const location = useLocation();
-	const { token, user } = useSelector((state: RootState) => state.auth);
+	const { token, name, email, isAuth } = useSelector(
+		(state: RootState) => state.auth
+	);
 
 	const handleLogout = async () => {
 		dispatch(logout());
@@ -22,7 +24,6 @@ const Header = () => {
 			const result = await logoutUser(token);
 
 			if (result.success) {
-				localStorage.removeItem('userToken');
 				alert('Successfully logged out');
 				navigate('/login');
 			} else {
@@ -37,11 +38,11 @@ const Header = () => {
 	return (
 		<header className='header'>
 			<Logo />
-			{token ? (
+			{isAuth ? (
 				location.pathname !== '/register' &&
 				location.pathname !== '/login' && (
 					<div className='logout__container'>
-						<p>{user?.name || user?.email}</p>
+						<p>{name || email}</p>
 						<Button onClick={handleLogout}>Logout</Button>
 					</div>
 				)

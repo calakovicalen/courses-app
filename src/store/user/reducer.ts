@@ -1,10 +1,12 @@
 import { UserActionTypes, AuthState, UsersAction } from './types';
 
 const initialState: AuthState = {
-	token: null,
+	isAuth: false,
+	name: '',
+	email: '',
+	token: localStorage.getItem('userToken') || '',
 	loading: false,
 	error: null,
-	user: null,
 };
 
 export const authReducer = (state = initialState, action: UsersAction) => {
@@ -16,9 +18,11 @@ export const authReducer = (state = initialState, action: UsersAction) => {
 			localStorage.setItem('userToken', action.payload.token);
 			return {
 				...state,
+				isAuth: true,
 				loading: false,
 				token: action.payload.token,
-				user: action.payload.user,
+				user: action.payload.user.name,
+				email: action.payload.user.email,
 				error: null,
 			};
 

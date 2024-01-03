@@ -46,6 +46,23 @@ export const logoutUser = async (token) => {
 	}
 };
 
+export const validateToken = async (token) => {
+	try {
+		const response = await fetch(`${URL}/users/me`, {
+			method: 'GET',
+			headers: {
+				Authorization: `${token}`,
+			},
+		});
+
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		console.error('Error validating token:', error);
+		throw error;
+	}
+};
+
 /* COURSES API */
 
 export const fetchCourses = async () => {

@@ -10,10 +10,12 @@ export interface UserType {
 }
 
 export interface AuthState {
+	isAuth: boolean;
 	token: string | null;
+	name: string;
+	email: string;
 	loading: boolean;
 	error: string | null;
-	user: UserType | null;
 }
 
 export type UsersAction =

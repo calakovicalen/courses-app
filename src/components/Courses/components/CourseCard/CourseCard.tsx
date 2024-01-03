@@ -49,7 +49,7 @@ const CourseCard = ({
 						<span>Authors:</span>
 						{filteredAuthors.map((author, index) => (
 							<React.Fragment key={index}>
-								{index < authors.length - 1 ? (
+								{index < filteredAuthors.length - 1 ? (
 									<>{` ${author?.name}, `}</>
 								) : (
 									<>{` ${author?.name}`}</>

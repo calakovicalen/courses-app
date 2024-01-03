@@ -22,6 +22,10 @@ function Courses() {
 
 	const [filteredCourses, setFilteredCourses] = useState<CourseType[]>(courses);
 
+	useEffect(() => {
+		setFilteredCourses(courses);
+	}, [courses]);
+
 	const handleSearch = (searchQuery: string) => {
 		const lowerCaseQuery = searchQuery.toLowerCase();
 
@@ -50,7 +54,7 @@ function Courses() {
 	}, []);
 
 	const renderContent = () => {
-		if (courses.length === 0) {
+		if (filteredCourses.length === 0) {
 			return <EmptyCourseList />;
 		}
 
@@ -62,7 +66,7 @@ function Courses() {
 						Add new course
 					</Button>
 				</div>
-				<CoursesList courses={courses} />
+				<CoursesList courses={filteredCourses} />
 			</>
 		);
 	};

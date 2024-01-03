@@ -13,16 +13,22 @@ export const loginRequest = (): LoginRequestAction => ({
 export const loginSuccess = (
 	token: string,
 	user: UserType
-): LoginSuccessAction => ({
-	type: UserActionTypes.LOGIN_SUCCESS,
-	payload: { token, user },
-});
+): LoginSuccessAction => {
+	localStorage.setItem('userToken', token);
+	return {
+		type: UserActionTypes.LOGIN_SUCCESS,
+		payload: { token, user },
+	};
+};
 
 export const loginFailure = (error: string): LoginFailureAction => ({
 	type: UserActionTypes.LOGIN_FAILURE,
 	payload: { error },
 });
 
-export const logout = () => ({
-	type: UserActionTypes.LOGOUT,
-});
+export const logout = () => {
+	localStorage.removeItem('userToken');
+	return {
+		type: UserActionTypes.LOGOUT,
+	};
+};
