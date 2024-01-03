@@ -16,6 +16,7 @@ import Button from 'src/common/Button/Button';
 import AuthorItem from './components/AuthorItem/AuthorItem';
 
 import './CreateCourse.css';
+import { CourseType } from 'src/store/courses/types';
 
 const CreateCourse = () => {
 	const navigate = useNavigate();
@@ -46,7 +47,7 @@ const CreateCourse = () => {
 		}));
 	};
 
-	const handleCreateAuthor = () => {
+	const handleCreateAuthor = async () => {
 		const { newAuthor } = formData;
 
 		if (newAuthor.trim() === '') {
@@ -57,7 +58,9 @@ const CreateCourse = () => {
 			return;
 		}
 
-		const newAuthorObj = { id: uuid(), name: newAuthor };
+		const data = await addAuthor({ name: newAuthor }, token);
+		const newAuthorObj = data.result;
+
 		setAuthors([...authors, newAuthorObj]);
 		setFormData((prevData) => ({
 			...prevData,
@@ -70,11 +73,10 @@ const CreateCourse = () => {
 		}));
 	};
 
-	const handleAddAuthor = async (author) => {
+	const handleAddAuthor = (author) => {
 		setAuthors((prevAuthors) => prevAuthors.filter((a) => a.id !== author.id));
 		setCourseAuthors((prevCourseAuthors) => [...prevCourseAuthors, author]);
-		const data = await addAuthor(author, token);
-		console.log(data);
+
 		dispatch(addNewAuthorAction(author));
 	};
 
@@ -101,9 +103,9 @@ const CreateCourse = () => {
 				return;
 			}
 
-			const authorIds = courseAuthors.map((author) => author.id);
+			const authorIds: string[] = courseAuthors.map((author) => author.id);
 
-			const newCourseObj = {
+			const newCourseObj: CourseType = {
 				id: uuid(),
 				title,
 				description,
@@ -111,6 +113,7 @@ const CreateCourse = () => {
 				authors: authorIds,
 				creationDate: formatCreationDate(),
 			};
+
 			console.log(newCourseObj);
 			const data = await addCourse(newCourseObj, token);
 			console.log(data);

@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 import { deleteCourseAction } from 'src/store/courses/actions';
+import { RootState } from 'src/store/rootReducer';
+import { deleteCourse } from 'src/services';
 import { CourseCardProps } from '../../Courses.type';
 
 import Button from 'src/common/Button/Button';
@@ -17,13 +19,22 @@ const CourseCard = ({
 	description,
 	creationDate,
 	duration,
-	author: authors,
+	author,
 }: CourseCardProps) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	const { token } = useSelector((state: RootState) => state.auth);
+	const authors = useSelector((state: RootState) => state.authors);
+	const filteredAuthors = authors.filter((a) =>
+		author.some((author) => String(author) === a.id)
+	);
+
 	const handleShowCourse = () => navigate(`/courses/${id}`);
-	const handleDeleteCourse = () => dispatch(deleteCourseAction(id));
+	const handleDeleteCourse = async () => {
+		await deleteCourse(id, token);
+		dispatch(deleteCourseAction(id));
+	};
 	const handleEditCourse = () => console.log('edit');
 
 	return (
@@ -36,12 +47,12 @@ const CourseCard = ({
 				<div className='text-container'>
 					<p>
 						<span>Authors:</span>
-						{authors.map((author, index) => (
+						{filteredAuthors.map((author, index) => (
 							<React.Fragment key={index}>
 								{index < authors.length - 1 ? (
-									<>{` ${author.name}, `}</>
+									<>{` ${author?.name}, `}</>
 								) : (
-									<>{` ${author.name}`}</>
+									<>{` ${author?.name}`}</>
 								)}
 							</React.Fragment>
 						))}

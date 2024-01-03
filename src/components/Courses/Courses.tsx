@@ -11,8 +11,9 @@ import CoursesList from './components/CoursesList/CoursesList';
 import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
 
 import './Courses.css';
-import { fetchCourses } from 'src/services';
+import { fetchAuthors, fetchCourses } from 'src/services';
 import { getCoursesAction } from 'src/store/courses/actions';
+import { getAuthorsAction } from 'src/store/authors/actions';
 
 function Courses() {
 	const navigate = useNavigate();
@@ -38,7 +39,13 @@ function Courses() {
 		dispatch(getCoursesAction(data.result));
 	};
 
+	const getAuthors = async () => {
+		const data = await fetchAuthors();
+		dispatch(getAuthorsAction(data.result));
+	};
+
 	useEffect(() => {
+		getAuthors();
 		getCourses();
 	}, []);
 

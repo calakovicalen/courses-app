@@ -15,6 +15,10 @@ function CourseInfo() {
 	const course = courses.find((c) => c.id === courseId);
 	const authorNames = getAuthorNames(course);
 	const { id, title, description, duration, creationDate } = course;
+	const authors = useSelector((state: RootState) => state.authors);
+	const filteredAuthors = authors.filter((a) =>
+		authorNames.some((author) => String(author) === a.id)
+	);
 
 	const navigate = useNavigate();
 
@@ -47,7 +51,7 @@ function CourseInfo() {
 						</p>
 						<p>{creationDate}</p>
 						<p>
-							{authorNames.map((author, index) => (
+							{filteredAuthors.map((author, index) => (
 								<React.Fragment key={index}>
 									{index < authorNames.length - 1 ? (
 										<>{`${author.name}, `}</>
