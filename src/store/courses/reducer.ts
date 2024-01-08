@@ -7,6 +7,9 @@ export const coursesReducer = (
 	action: CoursesAction
 ) => {
 	switch (action.type) {
+		case CoursesActionTypes.GET_COURSE:
+			return state;
+
 		case CoursesActionTypes.ADD_COURSE:
 			return [...state, action.payload];
 

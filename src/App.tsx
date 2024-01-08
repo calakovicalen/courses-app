@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store/rootReducer';
@@ -8,47 +8,30 @@ import Courses from './components/Courses/Courses';
 import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 import CourseInfo from './components/CourseInfo/CourseInfo';
-import CreateCourse from './components/CreateCourse/CreateCourse';
+import CourseForm from './components/CourseForm/CourseForm';
 
 import './App.css';
-import { loginSuccess, logout } from './store/user/actions';
-import { validateToken } from './services';
+import { validateTokenAsync } from './store/user/thunk';
+import { ThunkDispatch } from '@reduxjs/toolkit';
 
 function App() {
-	const [isToken, setIsToken] = useState(false);
-	const { token, isAuth } = useSelector((state: RootState) => state.auth);
+	const { isAuth } = useSelector((state: RootState) => state.auth);
 
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		const item = localStorage.getItem('userToken');
-		setIsToken(item !== null);
-
-		if (isToken) {
-			navigate('/courses');
-		} else {
-			navigate('/login');
-		}
-	}, [isToken, setIsToken]);
+	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 
 	useEffect(() => {
 		const checkLocalStorageToken = async () => {
 			const storedToken = localStorage.getItem('userToken');
-
+			await dispatch(validateTokenAsync(storedToken));
 			if (storedToken) {
-				try {
-					const user = await validateToken(storedToken);
-
-					dispatch(loginSuccess(storedToken, user));
-				} catch (error) {
-					dispatch(logout());
-				}
+				navigate('/courses');
+			} else {
+				navigate('/login');
 			}
 		};
 
 		if (!isAuth) {
-			// If the user is not already authenticated, check the local storage for a token.
 			checkLocalStorageToken();
 		}
 	}, [dispatch, isAuth]);
@@ -59,7 +42,8 @@ function App() {
 			<Routes>
 				<Route path='/courses' element={<Courses />} />
 				<Route path='courses/:courseId' element={<CourseInfo />} />
-				<Route path='courses/add' element={<CreateCourse />} />
+				<Route path='courses/add' element={<CourseForm />} />
+				<Route path='courses/update/:courseId' element={<CourseForm />} />
 				<Route path='login' element={<Login />} />
 				<Route path='register' element={<Registration />} />
 			</Routes>

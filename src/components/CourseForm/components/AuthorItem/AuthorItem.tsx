@@ -6,8 +6,10 @@ import './AuthorItem.css';
 const AuthorItem = ({ author, onDelete, onAdd }) => (
 	<li className='authors-list'>
 		{author.name}
-		<button onClick={() => onAdd(author)}>+</button>
-		<button onClick={() => onDelete(author)}>
+		<button type='button' onClick={() => onAdd(author)}>
+			+
+		</button>
+		<button type='button' onClick={() => onDelete(author)}>
 			<TrashAuthor />
 		</button>
 	</li>

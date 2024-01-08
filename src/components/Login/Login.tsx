@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { loginUser } from 'src/services';
 import { RootState } from 'src/store/rootReducer';
-import {
-	loginFailure,
-	loginRequest,
-	loginSuccess,
-} from 'src/store/user/actions';
 
 import Button from 'src/common/Button/Button';
 import Form from 'src/common/Form/Form';
 import Input from 'src/common/Input/Input';
+import { login } from 'src/store/user/thunk';
+import { ThunkDispatch } from '@reduxjs/toolkit';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
@@ -22,7 +18,7 @@ const Login = () => {
 		password: false,
 	});
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 	const { loading } = useSelector((state: RootState) => state.auth);
 
 	const handleSubmit = async (event) => {
@@ -39,21 +35,11 @@ const Login = () => {
 			return;
 		}
 
-		dispatch(loginRequest());
-
 		try {
-			const result = await loginUser({ email, password });
-
-			if (result.success) {
-				dispatch(loginSuccess(result.data.result, result.data.user));
-				navigate('/courses');
-			} else {
-				dispatch(loginFailure(result.error));
-				alert(result.error);
-			}
+			await dispatch(login(email, password));
+			navigate('/courses');
 		} catch (error) {
 			console.error('Error during login', error);
-			dispatch(loginFailure('An error occurred during login'));
 		}
 	};
 

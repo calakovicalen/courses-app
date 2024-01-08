@@ -11,15 +11,15 @@ import CoursesList from './components/CoursesList/CoursesList';
 import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
 
 import './Courses.css';
-import { fetchAuthors, fetchCourses } from 'src/services';
-import { getCoursesAction } from 'src/store/courses/actions';
-import { getAuthorsAction } from 'src/store/authors/actions';
+import { fetchAuthorsThunk } from 'src/store/authors/thunk';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { fetchCoursesThunk } from 'src/store/courses/thunk';
 
 function Courses() {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 	const courses = useSelector((state: RootState) => state.courses);
-
+	const { role } = useSelector((state: RootState) => state.auth);
 	const [filteredCourses, setFilteredCourses] = useState<CourseType[]>(courses);
 
 	useEffect(() => {
@@ -38,20 +38,10 @@ function Courses() {
 		setFilteredCourses(filtered);
 	};
 
-	const getCourses = async () => {
-		const data = await fetchCourses();
-		dispatch(getCoursesAction(data.result));
-	};
-
-	const getAuthors = async () => {
-		const data = await fetchAuthors();
-		dispatch(getAuthorsAction(data.result));
-	};
-
 	useEffect(() => {
-		getAuthors();
-		getCourses();
-	}, []);
+		dispatch(fetchAuthorsThunk());
+		dispatch(fetchCoursesThunk());
+	}, [dispatch]);
 
 	const renderContent = () => {
 		if (filteredCourses.length === 0) {
@@ -62,9 +52,14 @@ function Courses() {
 			<>
 				<div className='searchbar__container'>
 					<SearchBar onSearch={handleSearch} />
-					<Button onClick={() => navigate('/courses/add')}>
-						Add new course
-					</Button>
+
+					{role === 'admin' ? (
+						<Button onClick={() => navigate('/courses/add')}>
+							Add new course
+						</Button>
+					) : (
+						''
+					)}
 				</div>
 				<CoursesList courses={filteredCourses} />
 			</>

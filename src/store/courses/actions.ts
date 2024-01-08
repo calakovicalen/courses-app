@@ -4,8 +4,14 @@ import {
 	CoursesActionTypes,
 	DeleteCourseAction,
 	EditCourseAction,
+	GetCourseAction,
 	GetCoursesAction,
 } from './types';
+
+export const getCourseAction = (courseId: string): GetCourseAction => ({
+	type: CoursesActionTypes.GET_COURSE,
+	payload: courseId,
+});
 
 export const addCourseAction = (courseData: CourseType): AddCourseAction => ({
 	type: CoursesActionTypes.ADD_COURSE,

@@ -7,13 +7,13 @@ import CourseCard from '../CourseCard/CourseCard';
 function CoursesList({ courses }) {
 	return (
 		<>
-			{courses.map((course) => {
+			{courses.map((course, index) => {
 				const { id, title, description, creationDate, duration } = course;
 				const authorNames = getAuthorNames(course);
 
 				return (
 					<CourseCard
-						key={id}
+						key={index}
 						id={id}
 						title={title}
 						description={description}

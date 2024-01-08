@@ -1,5 +1,9 @@
 import { Author } from 'src/constants';
 
 export function getAuthorNames(course): Author[] {
-	return course.authors.map((author) => author);
+	if (course && course.authors) {
+		return course.authors.map((author) => author);
+	} else {
+		return [];
+	}
 }

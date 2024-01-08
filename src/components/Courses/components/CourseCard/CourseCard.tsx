@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
-import { deleteCourseAction } from 'src/store/courses/actions';
 import { RootState } from 'src/store/rootReducer';
-import { deleteCourse } from 'src/services';
 import { CourseCardProps } from '../../Courses.type';
 
 import Button from 'src/common/Button/Button';
 import Trash from 'src/assets/Trash';
 import Pen from 'src/assets/Pen';
 import './CourseCard.css';
+import { deleteCourseThunk } from 'src/store/courses/thunk';
+import { ThunkDispatch } from '@reduxjs/toolkit';
 
 const CourseCard = ({
 	id,
@@ -22,20 +22,19 @@ const CourseCard = ({
 	author,
 }: CourseCardProps) => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 
-	const { token } = useSelector((state: RootState) => state.auth);
+	const { token, role } = useSelector((state: RootState) => state.auth);
 	const authors = useSelector((state: RootState) => state.authors);
 	const filteredAuthors = authors.filter((a) =>
 		author.some((author) => String(author) === a.id)
 	);
 
 	const handleShowCourse = () => navigate(`/courses/${id}`);
-	const handleDeleteCourse = async () => {
-		await deleteCourse(id, token);
-		dispatch(deleteCourseAction(id));
-	};
-	const handleEditCourse = () => console.log('edit');
+
+	const handleDeleteCourse = () => dispatch(deleteCourseThunk(id, token));
+
+	const handleEditCourse = () => navigate(`/courses/update/${id}`);
 
 	return (
 		<div className='course-card__container'>
@@ -67,12 +66,18 @@ const CourseCard = ({
 
 				<div className='buttons-container'>
 					<Button onClick={handleShowCourse}>Show course</Button>
-					<Button onClick={handleDeleteCourse}>
-						<Trash />
-					</Button>
-					<Button onClick={handleEditCourse}>
-						<Pen />
-					</Button>
+					{role === 'admin' ? (
+						<>
+							<Button onClick={handleDeleteCourse}>
+								<Trash />
+							</Button>
+							<Button onClick={handleEditCourse}>
+								<Pen />
+							</Button>
+						</>
+					) : (
+						''
+					)}
 				</div>
 			</div>
 		</div>

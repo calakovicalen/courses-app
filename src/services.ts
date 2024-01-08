@@ -1,5 +1,5 @@
 /* USER API */
-const URL = 'http://localhost:4000';
+export const URL = 'http://localhost:4000';
 
 export const loginUser = async ({ email, password }) => {
 	try {
@@ -109,6 +109,45 @@ export const deleteCourse = async (courseId, token) => {
 	}
 };
 
+export const fetchCourse = async (courseId: string) => {
+	try {
+		const response = await fetch(`${URL}/courses/${courseId}`);
+		if (!response.ok) {
+			throw new Error(
+				`Failed to fetch single course. Status: ${response.status}`
+			);
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		throw new Error(`Error fetching single course: ${error.message}`);
+	}
+};
+
+export const updateCourse = async (courseData, token: string) => {
+	try {
+		const response = await fetch(`${URL}/courses/${courseData.id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `${token}`,
+			},
+			body: JSON.stringify(courseData),
+		});
+
+		if (!response.ok) {
+			throw new Error(
+				`Failed to update single course. Status: ${response.status}`
+			);
+		}
+
+		const updatedCourse = await response.json();
+		return updatedCourse;
+	} catch (error) {
+		throw new Error(`Error updating single course: ${error.message}`);
+	}
+};
+
 /* AUTHORS API */
 
 export const fetchAuthors = async () => {
@@ -133,7 +172,7 @@ export const addAuthor = async (authorData, token) => {
 			body: JSON.stringify(authorData),
 		});
 		const data = await response.json();
-		return data;
+		return data.result;
 	} catch (error) {
 		console.error('Error adding course:', error);
 		throw error;
@@ -142,13 +181,15 @@ export const addAuthor = async (authorData, token) => {
 
 export const deleteAuthor = async (authorId, token) => {
 	try {
-		await fetch(`${URL}/courses/${authorId}`, {
+		const response = await fetch(`${URL}/authors/${authorId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `${token}`,
 			},
 		});
+		const data = await response.json();
+		return data;
 	} catch (error) {
 		console.error('Error deleting course:', error);
 		throw error;

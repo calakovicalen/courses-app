@@ -5,8 +5,7 @@ export const enum UserActionTypes {
 	LOGOUT = 'LOGOUT',
 }
 export interface UserType {
-	name: string;
-	email: string;
+	result: { name: string; email: string; role: string };
 }
 
 export interface AuthState {
@@ -16,6 +15,7 @@ export interface AuthState {
 	email: string;
 	loading: boolean;
 	error: string | null;
+	role: string;
 }
 
 export type UsersAction =

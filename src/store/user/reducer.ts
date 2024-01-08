@@ -7,6 +7,7 @@ const initialState: AuthState = {
 	token: localStorage.getItem('userToken') || '',
 	loading: false,
 	error: null,
+	role: '',
 };
 
 export const authReducer = (state = initialState, action: UsersAction) => {
@@ -21,16 +22,17 @@ export const authReducer = (state = initialState, action: UsersAction) => {
 				isAuth: true,
 				loading: false,
 				token: action.payload.token,
-				user: action.payload.user.name,
-				email: action.payload.user.email,
+				name: action.payload.user.result?.name,
+				email: action.payload.user.result?.email,
 				error: null,
+				role: action.payload.user.result?.role,
 			};
 
 		case UserActionTypes.LOGIN_FAILURE:
 			return { ...state, loading: false, error: action.payload.error };
 
 		case UserActionTypes.LOGOUT:
-			return { ...state, token: null, user: null };
+			return { ...state, isAuth: false, token: null };
 		default:
 			return state;
 	}

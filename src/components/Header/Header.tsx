@@ -9,30 +9,20 @@ import Button from 'src/common/Button/Button';
 import Logo from './components/Logo/Logo';
 import './Header.css';
 import { logoutUser } from 'src/services';
+import { logoutAsync } from 'src/store/user/thunk';
+import { ThunkDispatch } from '@reduxjs/toolkit';
 
 const Header = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 	const location = useLocation();
+
 	const { token, name, email, isAuth } = useSelector(
 		(state: RootState) => state.auth
 	);
 
 	const handleLogout = async () => {
-		dispatch(logout());
-		try {
-			const result = await logoutUser(token);
-
-			if (result.success) {
-				alert('Successfully logged out');
-				navigate('/login');
-			} else {
-				alert(result.error);
-			}
-		} catch (error) {
-			console.error('Error during logout:', error);
-			alert('An error occurred during logout');
-		}
+		await dispatch(logoutAsync(token));
 	};
 
 	return (

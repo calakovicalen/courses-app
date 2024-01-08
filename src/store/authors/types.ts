@@ -5,6 +5,10 @@ export const enum AuthorsActionTypes {
 }
 
 export interface AuthorType {
+	result: {
+		id: string;
+		name: string;
+	};
 	id: string;
 	name: string;
 }
@@ -16,7 +20,7 @@ interface AddAuthor {
 
 interface DeleteAuthor {
 	type: AuthorsActionTypes.DELETE_AUTHOR;
-	payload: AuthorType;
+	payload: string;
 }
 
 export type AuthorsAction = AddAuthor | DeleteAuthor | GetAuthorsAction;
@@ -29,4 +33,9 @@ export type AddNewAuthorsAction = {
 export type GetAuthorsAction = {
 	type: AuthorsActionTypes.GET_AUTHORS;
 	payload: AuthorType[];
+};
+
+export type DeleteAuthorAction = {
+	type: AuthorsActionTypes.DELETE_AUTHOR;
+	payload: string;
 };

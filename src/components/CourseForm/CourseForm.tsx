@@ -1,36 +1,34 @@
-import React, { useState } from 'react';
-import uuid from 'react-uuid';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { addCourseAction } from 'src/store/courses/actions';
-import { addNewAuthorAction } from 'src/store/authors/actions';
 import { AuthorType } from 'src/store/authors/types';
 import { getCourseDuration } from 'src/helpers/getCourseDuration';
 import { formatCreationDate } from 'src/helpers/formatCreationDate';
 import { RootState } from 'src/store/rootReducer';
-import { addAuthor, addCourse } from 'src/services';
-
 import Input from 'src/common/Input/Input';
 import Button from 'src/common/Button/Button';
 import AuthorItem from './components/AuthorItem/AuthorItem';
+import './CourseForm.css';
+import { addAuthorThunk, deleteAuthorThunk } from 'src/store/authors/thunk';
+import { ThunkDispatch } from '@reduxjs/toolkit';
+import { addCourseThunk, updateCourseThunk } from 'src/store/courses/thunk';
 
-import './CreateCourse.css';
-import { CourseType } from 'src/store/courses/types';
-
-const CreateCourse = () => {
+const CourseForm = () => {
+	const { courseId } = useParams();
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 	const { token } = useSelector((state: RootState) => state.auth);
+	const authors = useSelector((state: RootState) => state.authors);
+	const courses = useSelector((state: RootState) => state.courses);
 
+	const [isUpdateMode, setIsUpdateMode] = useState(false);
 	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
 		duration: '',
 		newAuthor: '',
 	});
-
-	const [authors, setAuthors] = useState<AuthorType[]>([]);
 	const [courseAuthors, setCourseAuthors] = useState<AuthorType[]>([]);
 
 	const [errors, setErrors] = useState({
@@ -47,7 +45,7 @@ const CreateCourse = () => {
 		}));
 	};
 
-	const handleCreateAuthor = async () => {
+	const handleCreateAuthor = () => {
 		const { newAuthor } = formData;
 
 		if (newAuthor.trim() === '') {
@@ -58,10 +56,7 @@ const CreateCourse = () => {
 			return;
 		}
 
-		const data = await addAuthor({ name: newAuthor }, token);
-		const newAuthorObj = data.result;
-
-		setAuthors([...authors, newAuthorObj]);
+		dispatch(addAuthorThunk({ name: newAuthor }, token));
 		setFormData((prevData) => ({
 			...prevData,
 			newAuthor: '',
@@ -74,14 +69,14 @@ const CreateCourse = () => {
 	};
 
 	const handleAddAuthor = (author) => {
-		setAuthors((prevAuthors) => prevAuthors.filter((a) => a.id !== author.id));
 		setCourseAuthors((prevCourseAuthors) => [...prevCourseAuthors, author]);
-
-		dispatch(addNewAuthorAction(author));
 	};
 
 	const handleDeleteAuthor = (author) => {
-		setAuthors((prevAuthors) => prevAuthors.filter((a) => a.id !== author.id));
+		setCourseAuthors((prevCourseAuthors) =>
+			prevCourseAuthors.filter((a) => a.id !== author.id)
+		);
+		dispatch(deleteAuthorThunk(author.id, token));
 	};
 
 	const handleCreateCourse = async (e) => {
@@ -105,8 +100,8 @@ const CreateCourse = () => {
 
 			const authorIds: string[] = courseAuthors.map((author) => author.id);
 
-			const newCourseObj: CourseType = {
-				id: uuid(),
+			const newCourseObj = {
+				id: courseId,
 				title,
 				description,
 				duration: Number(duration),
@@ -114,16 +109,44 @@ const CreateCourse = () => {
 				creationDate: formatCreationDate(),
 			};
 
-			console.log(newCourseObj);
-			const data = await addCourse(newCourseObj, token);
-			console.log(data);
+			if (isUpdateMode) {
+				dispatch(updateCourseThunk(newCourseObj, token));
+				console.log(courses);
+				console.log(newCourseObj);
+			} else {
+				dispatch(addCourseThunk(newCourseObj, token));
+			}
 
-			dispatch(addCourseAction(newCourseObj));
 			navigate('/courses');
 		} catch (error) {
 			console.error('Error creating course:', error);
 		}
 	};
+
+	useEffect(() => {
+		console.log(isUpdateMode);
+		console.log(courseId);
+		if (courseId) {
+			setIsUpdateMode(true);
+		}
+	}, [courseId, isUpdateMode]);
+
+	useEffect(() => {
+		if (isUpdateMode) {
+			const singleCourse = courses.find((course) => course.id === courseId);
+			if (singleCourse) {
+				setFormData({
+					title: singleCourse.title,
+					description: singleCourse.description,
+					duration: singleCourse.duration.toString(),
+					newAuthor: '',
+				});
+				setCourseAuthors(
+					authors.filter((author) => singleCourse.authors.includes(author.id))
+				);
+			}
+		}
+	}, [isUpdateMode]);
 
 	return (
 		<section className='create-course__container'>
@@ -215,11 +238,13 @@ const CreateCourse = () => {
 					>
 						Cancel
 					</Button>
-					<Button type='submit'>Create Course</Button>
+					<Button type='submit'>
+						{courseId ? 'Save Changes' : 'Create Course'}
+					</Button>
 				</div>
 			</form>
 		</section>
 	);
 };
 
-export default CreateCourse;
+export default CourseForm;
