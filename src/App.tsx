@@ -13,6 +13,7 @@ import CourseForm from './components/CourseForm/CourseForm';
 import './App.css';
 import { validateTokenAsync } from './store/user/thunk';
 import { ThunkDispatch } from '@reduxjs/toolkit';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 
 function App() {
 	const { isAuth } = useSelector((state: RootState) => state.auth);
@@ -42,8 +43,24 @@ function App() {
 			<Routes>
 				<Route path='/courses' element={<Courses />} />
 				<Route path='courses/:courseId' element={<CourseInfo />} />
-				<Route path='courses/add' element={<CourseForm />} />
-				<Route path='courses/update/:courseId' element={<CourseForm />} />
+
+				<Route
+					path='courses/add'
+					element={
+						<PrivateRoute>
+							<CourseForm />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='courses/update/:courseId'
+					element={
+						<PrivateRoute>
+							<CourseForm />
+						</PrivateRoute>
+					}
+				/>
+
 				<Route path='login' element={<Login />} />
 				<Route path='register' element={<Registration />} />
 			</Routes>
