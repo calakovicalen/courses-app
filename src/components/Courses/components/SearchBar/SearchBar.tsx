@@ -1,9 +1,8 @@
 import React, { useState, ChangeEvent } from 'react';
 
-import Button from 'src/common/Button/Button';
-
 import { SearchBarProps } from './SearchBar.type';
 
+import Button from 'src/common/Button/Button';
 import './SearchBar.css';
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
@@ -26,7 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 				onChange={handleInputChange}
 				className='search-bar'
 			/>
-			<Button buttonText='Search' onClick={handleSearchClick} />
+			<Button onClick={handleSearchClick}>Search</Button>
 		</div>
 	);
 };

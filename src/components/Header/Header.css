@@ -8,3 +8,15 @@
     box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.15);
     padding: 0 1.875rem;
 }
+
+.logout__container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logout__container p {
+    font-size: .875rem;
+    font-weight: 700;
+    color: #333e48;
+}
