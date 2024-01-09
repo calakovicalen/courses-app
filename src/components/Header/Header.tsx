@@ -3,12 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from 'src/store/rootReducer';
-import { logout } from 'src/store/user/actions';
 
 import Button from 'src/common/Button/Button';
 import Logo from './components/Logo/Logo';
 import './Header.css';
-import { logoutUser } from 'src/services';
 import { logoutAsync } from 'src/store/user/thunk';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 

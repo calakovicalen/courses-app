@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from 'src/store/rootReducer';
@@ -19,7 +19,9 @@ function Courses() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 	const courses = useSelector((state: RootState) => state.courses);
-	const { role } = useSelector((state: RootState) => state.auth);
+	const { role } = useSelector((state: RootState) => state.auth) ?? {
+		role: '',
+	};
 	const [filteredCourses, setFilteredCourses] = useState<CourseType[]>(courses);
 
 	useEffect(() => {
@@ -53,13 +55,9 @@ function Courses() {
 				<div className='searchbar__container'>
 					<SearchBar onSearch={handleSearch} />
 
-					{role === 'admin' ? (
-						<Button onClick={() => navigate('/courses/add')}>
-							Add new course
-						</Button>
-					) : (
-						''
-					)}
+					<Link to={'/courses/add'} data-testid='add-new-course'>
+						<Button>Add new course</Button>
+					</Link>
 				</div>
 				<CoursesList courses={filteredCourses} />
 			</>

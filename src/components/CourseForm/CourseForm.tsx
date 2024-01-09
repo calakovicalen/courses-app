@@ -18,7 +18,9 @@ const CourseForm = () => {
 	const { courseId } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
-	const { token } = useSelector((state: RootState) => state.auth);
+	const { token } = useSelector((state: RootState) => state.auth) ?? {
+		token: '',
+	};
 	const authors = useSelector((state: RootState) => state.authors);
 	const courses = useSelector((state: RootState) => state.courses);
 

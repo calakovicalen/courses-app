@@ -1,9 +1,9 @@
 import { CourseType, CoursesAction, CoursesActionTypes } from './types';
 
-const initCoursesState = [] as CourseType[];
+const initCoursesState: CourseType[] = [];
 
 export const coursesReducer = (
-	state = initCoursesState,
+	state: CourseType[] = initCoursesState,
 	action: CoursesAction
 ) => {
 	switch (action.type) {

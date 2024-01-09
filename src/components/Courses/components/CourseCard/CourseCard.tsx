@@ -24,7 +24,10 @@ const CourseCard = ({
 	const navigate = useNavigate();
 	const dispatch = useDispatch<ThunkDispatch<RootState, any, any>>();
 
-	const { token, role } = useSelector((state: RootState) => state.auth);
+	const { token, role } = useSelector((state: RootState) => state.auth) ?? {
+		token: '',
+		role: '',
+	};
 	const authors = useSelector((state: RootState) => state.authors);
 	const filteredAuthors = authors.filter((a) =>
 		author.some((author) => String(author) === a.id)
