@@ -10,6 +10,7 @@ import {
 	deleteCourseAction,
 	getCourseAction,
 	getCoursesAction,
+	updateCourseAction,
 } from './actions';
 
 export const fetchCoursesThunk = () => async (dispatch: any) => {
@@ -57,6 +58,7 @@ export const updateCourseThunk =
 	(courseData, token: string) => async (dispatch: any) => {
 		try {
 			const updatedCourse = await updateCourse(courseData, token);
+			dispatch(updateCourseAction(updatedCourse));
 			return updatedCourse.result;
 		} catch (error) {
 			console.error('Error updating single course:', error);

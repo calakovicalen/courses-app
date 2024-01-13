@@ -1,6 +1,6 @@
 export const enum CoursesActionTypes {
 	ADD_COURSE = 'ADD_COURSE',
-	EDIT_COURSE = 'EDIT_COURSE',
+	UPDATE_COURSE = 'UPDATE_COURSE',
 	DELETE_COURSE = 'DELETE_COURSE',
 	GET_COURSES = 'GET_COURSES',
 	GET_COURSE = 'GET_COURSE',
@@ -16,7 +16,7 @@ export interface CourseType {
 
 export type CoursesAction =
 	| AddCourseAction
-	| EditCourseAction
+	| UpdateCourseAction
 	| DeleteCourseAction
 	| GetCoursesAction
 	| GetCourseAction;
@@ -31,8 +31,8 @@ export type AddCourseAction = {
 	payload: CourseType;
 };
 
-export type EditCourseAction = {
-	type: CoursesActionTypes.EDIT_COURSE;
+export type UpdateCourseAction = {
+	type: CoursesActionTypes.UPDATE_COURSE;
 	payload: CourseType;
 };
 

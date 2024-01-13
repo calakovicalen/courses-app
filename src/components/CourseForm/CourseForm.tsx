@@ -21,7 +21,6 @@ const CourseForm = () => {
 	const { token } = useSelector((state: RootState) => state.auth);
 	const authors = useSelector((state: RootState) => state.authors);
 	const courses = useSelector((state: RootState) => state.courses);
-
 	const [isUpdateMode, setIsUpdateMode] = useState(false);
 	const [formData, setFormData] = useState({
 		title: '',
@@ -101,7 +100,7 @@ const CourseForm = () => {
 			const authorIds: string[] = courseAuthors.map((author) => author.id);
 
 			const newCourseObj = {
-				id: courseId,
+				id: courseId ? courseId : '',
 				title,
 				description,
 				duration: Number(duration),
@@ -110,22 +109,18 @@ const CourseForm = () => {
 			};
 
 			if (isUpdateMode) {
-				dispatch(updateCourseThunk(newCourseObj, token));
-				console.log(courses);
-				console.log(newCourseObj);
+				await dispatch(updateCourseThunk(newCourseObj, token));
+				navigate('/courses');
 			} else {
-				dispatch(addCourseThunk(newCourseObj, token));
+				await dispatch(addCourseThunk(newCourseObj, token));
+				navigate('/courses');
 			}
-
-			navigate('/courses');
 		} catch (error) {
 			console.error('Error creating course:', error);
 		}
 	};
 
 	useEffect(() => {
-		console.log(isUpdateMode);
-		console.log(courseId);
 		if (courseId) {
 			setIsUpdateMode(true);
 		}

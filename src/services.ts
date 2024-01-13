@@ -125,6 +125,7 @@ export const fetchCourse = async (courseId: string) => {
 };
 
 export const updateCourse = async (courseData, token: string) => {
+	console.log(courseData);
 	try {
 		const response = await fetch(`${URL}/courses/${courseData.id}`, {
 			method: 'PUT',
@@ -142,7 +143,7 @@ export const updateCourse = async (courseData, token: string) => {
 		}
 
 		const updatedCourse = await response.json();
-		return updatedCourse;
+		return updatedCourse.result;
 	} catch (error) {
 		throw new Error(`Error updating single course: ${error.message}`);
 	}
