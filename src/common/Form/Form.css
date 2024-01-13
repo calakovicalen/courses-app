@@ -1,0 +1,37 @@
+.form-container {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #F7F7F7
+}
+
+.form-container h2 {
+    font-weight: 700;
+    color: #333e48;
+    font-size: 2rem;
+    margin-bottom: 2.25rem
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    color: #333e48;
+    gap: 3.375rem;
+    border-radius: .25rem;
+    border: 1px solid #cfcfcf;
+    padding: 4.0625rem 9.125rem;
+    background: #fff;
+    width: 36.25rem;
+}
+
+.form a {
+    text-decoration: none;
+    font-weight: 700;
+    color: #333e48;
+}
+
+.form p {
+    text-align: center;
+}

@@ -6,6 +6,7 @@ export interface CoursesProps {
 }
 
 export interface CourseCardProps {
+	id: string;
 	title: string;
 	description: string;
 	creationDate: string;
