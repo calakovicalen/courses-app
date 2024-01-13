@@ -1,12 +1,12 @@
 import React from 'react';
+import { ButtonProps } from './Button.type';
+
 import './Button.css';
 
-function Button({ buttonText, onClick }) {
-	return (
-		<button className={'button'} onClick={onClick}>
-			{buttonText}
-		</button>
-	);
-}
+const Button: React.FC<ButtonProps> = ({ children, onClick, type }) => (
+	<button className='button' onClick={onClick} type={type}>
+		{children}
+	</button>
+);
 
 export default Button;
